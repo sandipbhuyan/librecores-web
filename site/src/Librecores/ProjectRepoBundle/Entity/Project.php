@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Algolia\AlgoliaSearchBundle\Mapping\Annotation as Algolia;
 
 /**
  * A project
@@ -98,6 +99,8 @@ class Project
      * @Assert\Regex("/^[a-z][a-z0-9-]+$/")
      * @Assert\Length(min = 4, max = 30)
      *
+     * @Algolia\Attribute
+     *
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -113,6 +116,8 @@ class Project
      * @Assert\NotBlank
      * @Assert\Length(min = 5, max = 100)
      *
+     * @Algolia\Attribute
+     *
      * @ORM\Column(name="displayName", type="string", length=100)
      */
     private $displayName;
@@ -126,6 +131,8 @@ class Project
      * @var string
      *
      * @Assert\Length(max = 140)
+     *
+     * @Algolia\Attribute
      *
      * @ORM\Column(name="tagline", type="string", length=140, nullable=true)
      */
@@ -482,6 +489,8 @@ class Project
     /**
      * Get name
      *
+     * @Algolia\Attribute
+     *
      * @return string
      */
     public function getName()
@@ -666,6 +675,8 @@ class Project
     /**
      * Get descriptionText
      *
+     * @Algolia\Attribute
+     *
      * @return string
      */
     public function getDescriptionText()
@@ -737,6 +748,8 @@ class Project
 
     /**
      * Get tagline
+     *
+     * @Algolia\Attribute
      *
      * @return string
      */

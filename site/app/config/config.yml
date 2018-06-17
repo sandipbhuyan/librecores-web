@@ -199,3 +199,7 @@ sentry:
     dsn: "%sentry_dsn%"
     options:
         environment: "%sentry_env%"
+
+algolia:
+    application_id: "%algolia_app_id%"
+    api_key: "%algolia_api_key%"

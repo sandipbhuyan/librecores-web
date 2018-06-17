@@ -3,6 +3,7 @@
 namespace Librecores\ProjectRepoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Algolia\AlgoliaSearchBundle\Mapping\Annotation as Algolia;
 
 /**
  * A ProjectClassification represents a single classification for a Project
@@ -33,6 +34,8 @@ class ProjectClassification
      * Parent and child are separated by '::'.
      *
      * @var string
+     *
+     * @Algolia\Attribute
      *
      * @ORM\Column(name="classification", type="text")
      */
@@ -97,6 +100,8 @@ class ProjectClassification
 
     /**
      * Get classification
+     *
+     * @Algolia\Attribute
      *
      * @return string
      */
