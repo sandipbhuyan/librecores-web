@@ -35,7 +35,10 @@ librecores_project_repo_homepage:
 librecores_project_repo_project_search:
     path:     /search
     defaults: { _controller: LibrecoresProjectRepoBundle:Default:search }
-
+# Unified search: classification
+librecores_project_repo_classification_search:
+    path:     /classification/search
+    defaults: { _controller: LibrecoresProjectRepoBundle:Default:searchClassification }
 
 
 # Project/Organization management pages

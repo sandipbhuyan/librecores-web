@@ -2,6 +2,7 @@
 
 namespace Librecores\ProjectRepoBundle\Controller;
 
+use Librecores\ProjectRepoBundle\Entity\ClassificationHierarchy;
 use Librecores\ProjectRepoBundle\Entity\Project;
 use Librecores\ProjectRepoBundle\Entity\ProjectClassification;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,6 +112,41 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * Search for a project classification
+     *
+     * @param Request $req
+     *
+     * @return Response
+     */
+    public function searchClassificationAction(Request $req)
+    {
+        // Retrieve classification hierarchy
+        $classificationCategories = $this->getDoctrine()->getManager()
+            ->getRepository(ClassificationHierarchy::class)
+            ->findAll();
+
+        $classifications = [];
+        foreach ($classificationCategories as $category) {
+            $temp = [
+                "id" => $category->getId(),
+                "parentId" => $category->getParent() == null ?
+                    $category->getParent(): $category->getParent()->getId(),
+                "name" => $category->getName(),
+            ];
+            $classifications[] = $temp;
+        }
+
+        $classificationHierarchy = $this->buildTree($classifications);
+
+        return $this->render(
+            'LibrecoresProjectRepoBundle:Default:classification_search.html.twig',
+            [
+                'classificationHierarchy' => $classificationHierarchy,
+                'classificationDetails' => $classifications,
+            ]
+        );
+    }
 
     public function removeTrailingSlashAction(Request $request)
     {
@@ -147,5 +183,21 @@ class DefaultController extends Controller
         ->findOneByName($userOrOrganization);
 
         return $org;
+    }
+
+    private function buildTree(array $elements, $parentId = 0) {
+        $branch = [];
+
+        foreach ($elements as $element) {
+            if ($element['parentId'] == $parentId) {
+                $children = $this->buildTree($elements, $element['id']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+
+        return $branch;
     }
 }

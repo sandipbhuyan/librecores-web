@@ -789,3 +789,26 @@ a.classifiation-tag:hover {
   font-size: 0.8em;
   color: #999;
 }
+
+.classification-search {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.classification-search li {
+  font-family: Source Sans Pro,Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 300;
+  color: #464646;
+}
+
+.classification-search li input {
+  margin-right: 5px;
+}
+
+.classification-search li label {
+  font-weight: 500;
+  font-size: 11px;
+  display: inline;
+}

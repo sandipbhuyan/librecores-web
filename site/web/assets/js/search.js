@@ -174,3 +174,46 @@ function getFormattedDate(item){
   var formattedDate = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate();
   return formattedDate;
 }
+
+// Get the classification hirearchy of a child category
+function classificationSearch(root,classificationDetails, classifications) {
+  var classification = classifications;
+  function getClassificationHierarchy(parentId, name) {
+    if(parentId === null) {
+      return name;
+    }
+
+    for(var i = 0; i < classification.length; i++) {
+      if(classification[i]['id'] == parentId) {
+        name = classification[i]['name']  + '::' + name;
+        return getClassificationHierarchy(classification[i]['parentId'], name);
+        break;
+      }
+    }
+  }
+
+  function buildClassificationHierarchy(parentUL, branch) {
+    for (var key in branch.children) {
+        var item = branch.children[key];
+        $item = $('<li>', {
+            id: "item" + item.id
+        });
+        $item.append($('<input>', {
+            type: "checkbox",
+            name: "item" + item.id,
+            value: getClassificationHierarchy(item.parentId, item.name)
+        }));
+        $item.append($('<label>', {
+            for: "item" + item.id,
+            text: item.name
+        }));
+        parentUL.append($item);
+
+        if (item.children) {
+            var $ul = $('<ul>').addClass('classification-search').appendTo($item);
+            buildClassificationHierarchy($ul, item);
+        }
+    }
+  }
+  buildClassificationHierarchy(root, classificationDetails, classifications)
+}
