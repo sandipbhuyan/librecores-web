@@ -121,12 +121,24 @@ class DefaultController extends Controller
      */
     public function searchClassificationAction(Request $req)
     {
+        $classifications = [];
+        $searchResult = [];
+        $searchQuery = $req->get('query');
+        $indexManager = $this->get('search.index_manager');
         // Retrieve classification hierarchy
         $classificationCategories = $this->getDoctrine()->getManager()
             ->getRepository(ClassificationHierarchy::class)
             ->findAll();
 
-        $classifications = [];
+        if ($searchQuery !== null) {
+            $classificationsQuery = '';
+            foreach ($searchQuery as $query) {
+//                die(var_dump($classificationsQuery));
+                $classificationsQuery = $classificationsQuery . ' ' . $query;
+            }
+            $searchResult = $indexManager->rawSearch($classificationsQuery, Project::class);
+        }
+
         foreach ($classificationCategories as $category) {
             $temp = [
                 "id" => $category->getId(),
@@ -136,7 +148,7 @@ class DefaultController extends Controller
             ];
             $classifications[] = $temp;
         }
-
+        // Get classification hierarchy tree
         $classificationHierarchy = $this->buildTree($classifications);
 
         return $this->render(
@@ -144,6 +156,8 @@ class DefaultController extends Controller
             [
                 'classificationHierarchy' => $classificationHierarchy,
                 'classificationDetails' => $classifications,
+                'searchResult' => $searchResult,
+                'searchQuery' => $searchQuery,
             ]
         );
     }
@@ -185,6 +199,14 @@ class DefaultController extends Controller
         return $org;
     }
 
+    /**
+     * Build a classification hierarchy tree
+     *
+     * @param array $elements The sub-classifiers of a parent classifier
+     * @param int   $parentId The parent classifier id of the sub-classifiers
+     *
+     * @return array
+     */
     private function buildTree(array $elements, $parentId = 0) {
         $branch = [];
 

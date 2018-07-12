@@ -196,24 +196,53 @@ function classificationSearch(root,classificationDetails, classifications) {
     for (var key in branch.children) {
         var item = branch.children[key];
         $item = $('<li>', {
-            id: "item" + item.id
+            id: 'item' + item.id
         });
         $item.append($('<input>', {
-            type: "checkbox",
-            name: "item" + item.id,
-            value: getClassificationHierarchy(item.parentId, item.name)
+            type: 'checkbox',
+            name: 'item' + item.id,
+            value: getClassificationHierarchy(item.parentId, item.name),
+            class: 'classsification-catgory'
         }));
         $item.append($('<label>', {
-            for: "item" + item.id,
+            for: 'item' + item.id,
             text: item.name
         }));
         parentUL.append($item);
-
         if (item.children) {
             var $ul = $('<ul>').addClass('classification-search').appendTo($item);
             buildClassificationHierarchy($ul, item);
         }
     }
   }
-  buildClassificationHierarchy(root, classificationDetails, classifications)
+  buildClassificationHierarchy(root, classificationDetails, classifications);
+}
+
+function classificationSearchOperation(classificationQuery) {
+  console.log(classificationQuery)
+  $('.classsification-catgory').on('click',function () {
+    var value = $(this).val();
+      if(!$(this).is('checked')) {
+        $('form').append($('<input>', {
+          type: 'hidden',
+          value: value,
+          name: 'query[]'
+        })).submit();
+      }
+      else {
+        $('.input-query:input["'+value+'"]').parent().remove();
+      }
+
+  })
+  if(classificationQuery != null) {
+    for (var i = 0; i < classificationQuery.length; i++) {
+      $('.classsification-catgory:input[value="'+classificationQuery[i]+'"]').attr({'checked':'checked'});
+    }
+  }
+
+  $('.remove-classification').on('click',function () {
+    $(this).parent().remove();
+    $('form').submit();
+  })
+
 }
