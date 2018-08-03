@@ -127,7 +127,9 @@ other information about your project automatically.</p>
 
 {% block javascripts %}
   {{ parent() }}
-  {% javascripts filter="?jsqueeze" output="js/app_body.js" 'assets/js/bootstrap-select.js' %}
+  {% javascripts filter="?jsqueeze"
+    "assets/js/bootstrap-select.js"
+  %}
     <script src="{{ asset_url }}"></script>
   {% endjavascripts %}
 {% endblock %}
